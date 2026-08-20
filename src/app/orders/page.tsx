@@ -35,16 +35,21 @@ export default function OrdersPage() {
   const [editAddress, setEditAddress] = useState("");
 
   const fetchOrders = async () => {
-    const res = await fetch("/api/orders");
-    setOrders(await res.json());
+    try {
+      const res = await fetch("/api/orders");
+      const data = await res.json();
+      setOrders(Array.isArray(data) ? data : []);
+    } catch {
+      setOrders([]);
+    }
     setLoading(false);
   };
 
   useEffect(() => {
     fetchOrders();
-    fetch("/api/customers").then((r) => r.json()).then(setCustomers);
-    fetch("/api/restaurants").then((r) => r.json()).then(setRestaurants);
-    fetch("/api/menu-items").then((r) => r.json()).then(setMenuItems);
+    fetch("/api/customers").then((r) => r.json()).then((d) => setCustomers(Array.isArray(d) ? d : [])).catch(() => {});
+    fetch("/api/restaurants").then((r) => r.json()).then((d) => setRestaurants(Array.isArray(d) ? d : [])).catch(() => {});
+    fetch("/api/menu-items").then((r) => r.json()).then((d) => setMenuItems(Array.isArray(d) ? d : [])).catch(() => {});
   }, []);
 
   const filteredItems = menuItems.filter((m) => m.RestaurantID === parseInt(restaurantId));

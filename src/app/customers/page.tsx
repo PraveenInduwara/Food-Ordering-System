@@ -19,9 +19,13 @@ export default function CustomersPage() {
   const [loading, setLoading] = useState(true);
 
   const fetchCustomers = async () => {
-    const res = await fetch("/api/customers");
-    const data = await res.json();
-    setCustomers(data);
+    try {
+      const res = await fetch("/api/customers");
+      const data = await res.json();
+      setCustomers(Array.isArray(data) ? data : []);
+    } catch {
+      setCustomers([]);
+    }
     setLoading(false);
   };
 

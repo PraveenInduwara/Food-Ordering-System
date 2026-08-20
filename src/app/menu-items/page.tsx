@@ -26,14 +26,24 @@ export default function MenuItemsPage() {
   const [loading, setLoading] = useState(true);
 
   const fetchItems = async () => {
-    const res = await fetch("/api/menu-items");
-    setItems(await res.json());
+    try {
+      const res = await fetch("/api/menu-items");
+      const data = await res.json();
+      setItems(Array.isArray(data) ? data : []);
+    } catch {
+      setItems([]);
+    }
     setLoading(false);
   };
 
   const fetchRestaurants = async () => {
-    const res = await fetch("/api/restaurants");
-    setRestaurants(await res.json());
+    try {
+      const res = await fetch("/api/restaurants");
+      const data = await res.json();
+      setRestaurants(Array.isArray(data) ? data : []);
+    } catch {
+      setRestaurants([]);
+    }
   };
 
   useEffect(() => { fetchItems(); fetchRestaurants(); }, []);

@@ -19,9 +19,13 @@ export default function RestaurantsPage() {
   const [loading, setLoading] = useState(true);
 
   const fetchRestaurants = async () => {
-    const res = await fetch("/api/restaurants");
-    const data = await res.json();
-    setRestaurants(data);
+    try {
+      const res = await fetch("/api/restaurants");
+      const data = await res.json();
+      setRestaurants(Array.isArray(data) ? data : []);
+    } catch {
+      setRestaurants([]);
+    }
     setLoading(false);
   };
 
